@@ -10,7 +10,8 @@ export default function FontList({ fonts, onDelete }) {
         Browse a list of Zepto fonts to build your font group.
       </p>
 
-      <table className="border-collapse w-full mt-4 rounded-lg overflow-hidden">
+      <div className='overflow-x-auto'>
+        <table className="border-collapse w-full mt-4 rounded-lg overflow-hidden">
         <thead>
           <tr className="text-left text-slate-500 font-bold bg-gray-100">
             <th className="py-2 px-2 text-sm lg:text-base">Font Name</th>
@@ -69,6 +70,7 @@ export default function FontList({ fonts, onDelete }) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

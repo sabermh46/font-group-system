@@ -4,7 +4,7 @@ const path = require('path');
 
 const upload = multer({
   dest: 'uploads/',
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req, file, cbA) => {
     if (path.extname(file.originalname).toLowerCase() !== '.ttf') {
       return cb(new Error('Only .ttf files allowed!'));
     }
