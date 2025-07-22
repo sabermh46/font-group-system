@@ -14,7 +14,7 @@ export async function getFonts() {
 }
 
 export async function deleteFont(id) {
-  const res = await fetch(`http://localhost:4000/api/fonts/${id}`, {
+  const res = await fetch(`${BASE_URL}/api/fonts/${id}`, {
     method: 'DELETE',
   });
   return res.json();
@@ -34,7 +34,7 @@ export async function deleteGroup(id) {
 }
 
 export async function createGroup(data) {
-  const res = await fetch(`http://localhost:4000/api/groups`, {
+  const res = await fetch(`${BASE_URL}/api/groups`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
