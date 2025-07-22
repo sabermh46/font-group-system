@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const FontController = require('../controllers/FontController');
+const FontController = require('../controllers/fontController');
 const FontRepository = require('../repositories/fontRepository');
 const FontService = require('../services/fontService');
 
