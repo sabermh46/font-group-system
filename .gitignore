@@ -1,0 +1,11 @@
+# Ignore ALL node_modules in any subdirectory
+node_modules/
+
+# Optional: Mac system files
+.DS_Store
+
+# Optional: Logs
+*.log
+
+# Optional: Env files if you use them
+.env

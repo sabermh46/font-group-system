@@ -41,11 +41,16 @@ export default function FontGroupList({ groups, onDelete, onEdit }) {
                         Edit
                       </button>
                       <button
-                        onClick={() => deleteGroup(group.id).then(onDelete)}
-                        className="my-2 px-2 py-1 text-red-500 hover:underline"
-                      >
-                        Delete
-                      </button>
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to delete the group "${group.title}"?`)) {
+                              deleteGroup(group.id).then(onDelete);
+                            }
+                          }}
+                          className="my-2 px-2 py-1 text-red-500 hover:underline"
+                        >
+                          Delete
+                        </button>
+
                     </td>
                   </tr>
                 ))}

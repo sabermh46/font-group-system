@@ -222,12 +222,30 @@ export default function FontGroupCreator({
           + Add Row
         </button>
 
-        <button
-          onClick={handleSubmit}
-          className="px-2 py-1 rounded-md bg-green-600 text-white min-w-28"
-        >
-          {editingGroup ? 'Update' : 'Create'}
-        </button>
+        <div>
+          {editingGroup && (
+            <button
+              onClick={() => {
+                // Clear form
+                setEditingGroup(null);
+                setGroupTitle('');
+                setRows([{ fontId: '', customName: '', size: '1.00', price: '0' }]);
+                toast.info('Edit cancelled.');
+              }}
+              className="px-2 py-1 rounded-md bg-gray-400 text-white min-w-28"
+            >
+              Cancel
+            </button>
+          )}
+          <button
+            onClick={handleSubmit}
+            className="px-2 py-1 rounded-md bg-green-600 text-white min-w-28"
+          >
+            {editingGroup ? 'Update' : 'Create'}
+          </button>
+        </div>
+
+        
       </div>
     </div>
   );
