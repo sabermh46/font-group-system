@@ -232,7 +232,7 @@ export default function FontGroupCreator({
                 setRows([{ fontId: '', customName: '', size: '1.00', price: '0' }]);
                 toast.info('Edit cancelled.');
               }}
-              className="px-2 py-1 rounded-md bg-gray-400 text-white min-w-28"
+              className="px-2 py-1 mr-2 rounded-md bg-gray-400 text-white min-w-28"
             >
               Cancel
             </button>
