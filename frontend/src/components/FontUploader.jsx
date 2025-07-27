@@ -1,36 +1,31 @@
+// src/components/FontUploader.js
 import React, { useRef } from 'react';
-import { uploadFont } from '../api/api';
+import { toast } from 'react-toastify'; // Import toast for local validation messages
 
-export default function FontUploader({ onUpload }) {
+export default function FontUploader({ onUploadFont }) {
   const fileInputRef = useRef();
 
-  const handleDrop = async (e) => {
+  const handleFileProcessing = async (file) => {
+    if (file && file.name.endsWith('.ttf')) {
+      onUploadFont(file); // Delegate the upload logic to the parent/hook
+    } else {
+      toast.error('Only TTF files allowed!'); // Use toast for user feedback
+    }
+  };
+
+  const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith('.ttf')) {
-      const formData = new FormData();
-      formData.append('font', file);
-      await uploadFont(formData);
-      onUpload();
-    } else {
-      alert('Only TTF files allowed!');
-    }
+    handleFileProcessing(file);
   };
 
   const handleClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.name.endsWith('.ttf')) {
-      const formData = new FormData();
-      formData.append('font', file);
-      await uploadFont(formData);
-      onUpload();
-    } else {
-      alert('Only TTF files allowed!');
-    }
+    handleFileProcessing(file);
   };
 
   return (

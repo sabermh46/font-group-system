@@ -1,121 +1,27 @@
-import React, { useState, useRef } from 'react';
-import { toast } from 'react-toastify';
-import { createGroup } from '../api/api';
+// src/components/FontGroupCreator.js
+import React from 'react';
+import { useFontGroupForm } from '../hooks/useFontGroupForm';
 
 export default function FontGroupCreator({
   fonts,
   groups,
-  onCreate,
-  editingGroup,  // NEW: group to edit, if any
-  setEditingGroup, // NEW: to clear edit mode after save
+  onCreateOrUpdate,
+  editingGroup,
+  setEditingGroup,
 }) {
-  const [groupTitle, setGroupTitle] = useState('');
-  const [rows, setRows] = useState([
-    { fontId: '', customName: '', size: '1.00', price: '0' },
-  ]);
-
-  const titleInputRef = useRef();
-
-  // NEW: if editingGroup changes, load its data into form
-  React.useEffect(() => {
-    if (editingGroup) {
-      setGroupTitle(editingGroup.title);
-      setRows(
-        editingGroup.fonts.map((f) => ({
-          fontId: f.id,
-          customName: f.custom_name || '',
-          size: '1.00',
-          price: '0',
-        }))
-      );
-    }
-  }, [editingGroup]);
-
-  const addRow = () => {
-    setRows([...rows, { fontId: '', customName: '', size: '1.00', price: '0' }]);
-  };
-
-  const removeRow = (index) => {
-    setRows(rows.filter((_, i) => i !== index));
-  };
-
-  const handleRowChange = (index, field, value) => {
-    const updated = [...rows];
-    updated[index][field] = value;
-    setRows(updated);
-  };
-
-  const handleSubmit = async () => {
-    const validRows = rows.filter((r) => r.fontId);
-
-    if (!groupTitle.trim()) {
-      toast.error('Group title is required.');
-      titleInputRef.current.focus(); // ✅ set focus
-      return;
-    }
-
-    // Block duplicate title only when creating new
-    const duplicate =
-      !editingGroup &&
-      groups.some(
-        (g) =>
-          g.title.toLowerCase() === groupTitle.trim().toLowerCase()
-      );
-    if (duplicate) {
-      toast.error('Group title already exists.');
-      return;
-    }
-
-    if (validRows.length < 2) {
-      toast.error('You must select at least two fonts.');
-      return;
-    }
-
-    const payload = {
-      groupTitle: groupTitle.trim(),
-      fonts: validRows.map((r) => ({
-        fontId: parseInt(r.fontId),
-        customName: r.customName || '',
-      })),
-    };
-
-    // If editing, call update — else create
-    try {
-      let res;
-      if (editingGroup) {
-        res = await fetch(`http://localhost:4000/api/groups/${editingGroup.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }).then((r) => r.json());
-      } else {
-        res = await createGroup(payload);
-      }
-
-      if (res.success) {
-        toast.success(
-          editingGroup
-            ? 'Group updated successfully!'
-            : 'Font group created successfully!'
-        );
-        onCreate();
-        setGroupTitle('');
-        setRows([{ fontId: '', customName: '', size: '1.00', price: '0' }]);
-        if (setEditingGroup) setEditingGroup(null);
-      } else {
-        toast.error(res.error || 'Operation failed.');
-      }
-    } catch (err) {
-      toast.error('Server error.');
-    }
-  };
-
-  // Avoid duplicate selection:
-  const selectedFontIds = rows.map((r) => parseInt(r.fontId)).filter(Boolean);
-  const remainingFonts = fonts.filter(
-    (font) => !selectedFontIds.includes(font.id)
-  );
-  const canAddMore = remainingFonts.length > 0;
+  const {
+    groupTitle,
+    setGroupTitle,
+    rows,
+    addRow,
+    removeRow,
+    handleRowChange,
+    handleSubmit,
+    titleInputRef,
+    selectedFontIds,
+    canAddMore,
+    cancelEdit,
+  } = useFontGroupForm(fonts, groups, editingGroup, setEditingGroup, onCreateOrUpdate);
 
   return (
     <div className="p-4 rounded-lg shadow-[0px_0px_10px_10px_rgba(0,0,0,0.1)] bg-white my-4">
@@ -225,13 +131,7 @@ export default function FontGroupCreator({
         <div>
           {editingGroup && (
             <button
-              onClick={() => {
-                // Clear form
-                setEditingGroup(null);
-                setGroupTitle('');
-                setRows([{ fontId: '', customName: '', size: '1.00', price: '0' }]);
-                toast.info('Edit cancelled.');
-              }}
+              onClick={cancelEdit}
               className="px-2 py-1 mr-2 rounded-md bg-gray-400 text-white min-w-28"
             >
               Cancel
@@ -244,8 +144,6 @@ export default function FontGroupCreator({
             {editingGroup ? 'Update' : 'Create'}
           </button>
         </div>
-
-        
       </div>
     </div>
   );

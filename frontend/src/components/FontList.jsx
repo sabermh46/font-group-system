@@ -1,8 +1,7 @@
-import { toast } from 'react-toastify';
-import { deleteFont } from '../api/api';
+// src/components/FontList.js
+import React from 'react';
 
-
-export default function FontList({ fonts, onDelete }) {
+export default function FontList({ fonts, onDeleteFont }) {
   return (
     <div className="p-4 rounded-lg shadow-[0px_0px_10px_10px_rgba(0,0,0,0.1)] bg-white my-4">
       <h2 className="font-bold text-lg">Our Fonts</h2>
@@ -33,37 +32,18 @@ export default function FontList({ fonts, onDelete }) {
 
             return (
               <tr key={font.id} className={`mb-4 ${i % 2 === 1 ? 'bg-gray-100' : ''}`}>
-                <td className="py-2 px-2 text-sm lg:text-base">{font.name}</td>
+                <td className="py-2 px-2 text-sm lg:text-base break-words">{font.name}</td>
                 <td className="my-2 px-2 text-sm lg:text-base line-clamp-3" style={{ fontFamily: fontFaceName }}>
                   <style>{styleTag}</style>
                   The quick brown fox jumps over the lazy dog
                 </td>
                 <td className="py-2 px-2 text-sm lg:text-base">
                   <button
-                  onClick={async () => {
-                    if (window.confirm('Are you sure you want to delete this font?')) {
-                      try {
-                        const res = await deleteFont(font.id);
-
-                        if (res.success) {
-                          toast.success('Font deleted successfully!');
-                          onDelete(); // ✅ Refresh the list only on success
-                        } else if (res.error) {
-                          toast.error(res.error);
-                        } else {
-                          toast.error('Something went wrong.');
-                        }
-
-                      } catch (err) {
-                        toast.error('Failed to delete font.');
-                      }
-                    }
-                  }}
+                  onClick={() => onDeleteFont(font.id)} // Calls the handler passed from useFontData
                   className="text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
-
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             );

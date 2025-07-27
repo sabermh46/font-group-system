@@ -1,7 +1,7 @@
+// src/components/FontGroupList.js
 import React from 'react';
-import { deleteGroup } from '../api/api';
 
-export default function FontGroupList({ groups, onDelete, onEdit }) {
+export default function FontGroupList({ groups, onDeleteGroup, onEdit }) {
   return (
     <div className="p-4 rounded-lg shadow-[0px_0px_10px_10px_rgba(0,0,0,0.1)] bg-white my-4">
       <h2 className="font-bold text-lg mb-2">Our Font Groups</h2>
@@ -42,24 +42,17 @@ export default function FontGroupList({ groups, onDelete, onEdit }) {
                           Edit
                         </button>
                         <button
-                            onClick={() => {
-                              if (window.confirm(`Are you sure you want to delete the group "${group.title}"?`)) {
-                                deleteGroup(group.id).then(onDelete);
-                              }
-                            }}
+                            onClick={() => onDeleteGroup(group.id, group.title)} // Calls the handler passed from useFontData
                             className="my-2 px-2 py-1 text-red-500 hover:underline"
                           >
                             Delete
                           </button>
-
                       </td>
                     </tr>
                   ))}
                 </tbody>
         </table>
       </div>
-
-      
     </div>
   );
 }
